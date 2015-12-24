@@ -15,7 +15,7 @@ public class TestClass {
 		Tentacle tentacle = new Tentacle();
 		
 		try {
-			String ret = tentacle.getHtml("http://s.weibo.com/weibo/%25E8%25BD%25A6%25E7%25A5%25A8?topnav=1&wvr=6&b=1");
+			String ret = tentacle.getHtml("http://s.weibo.com/weibo/%25E5%259C%25A3%25E8%25AF%259E?topnav=1&wvr=6&b=1");
 			tentacle.write2text(ret, "d:/crawler.txt");
 			System.out.println(ret);
 		} catch (Exception e) {

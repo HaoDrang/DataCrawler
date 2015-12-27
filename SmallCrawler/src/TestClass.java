@@ -8,7 +8,7 @@ public class TestClass {
 		
 		Logger log = Logger.getLogger(CrawlerBody.class.getName());
 		
-		log.log(Level.SEVERE, "Logger Start...");
+		log.log(Level.INFO, "Logger Start...");
 		
 		log.log(Level.INFO, "Test Class Begin..");
 		

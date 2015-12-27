@@ -26,8 +26,8 @@ import org.apache.http.impl.cookie.DefaultCookieSpecProvider;
 import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.EntityUtils;
 
-import com.crawler.tentacle.html.HtmlGetter;
-import com.crawler.tentacle.html.IHtmlGetter;
+import com.crawler.tentacle.html.getter.HtmlGetter;
+import com.crawler.tentacle.html.getter.IHtmlGetter;
 
 public class Tentacle {
 	/**get a html page from target url

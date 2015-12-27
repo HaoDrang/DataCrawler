@@ -1,4 +1,4 @@
-package com.crawler.tentacle.html;
+package com.crawler.tentacle.html.getter;
 
 public interface IHtmlGetter {
 	String getHtml(String url);

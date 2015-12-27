@@ -1,4 +1,4 @@
-package com.crawler.tentacle.html;
+package com.crawler.tentacle.html.getter;
 
 import java.io.IOException;
 

@@ -15,15 +15,13 @@ import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
 public class WeiboGetter extends RamCrawler implements IHtmlGetter {
 
 	String mCookie;
-	
-	public WeiboGetter(boolean autoParse, String account, String password) throws Exception {
+
+	public WeiboGetter(boolean autoParse, String cookieStr) throws Exception {
 		super(autoParse);
-		this.mCookie = WeiboTool.makeCookie("SSOLoginState,1451458918,"
-				+ "SUB,_2A257h_E2DeTRGeNG6lQV9SjOzDSIHXVYi59-rDV6PUJbrdBeLWb6kW1HsaGCtn_jUI4A3rGbEoxA9XXKOA..,"
-				+ "SUHB,0cS3ag8IWld-he,_T_WM,9d0de3110e8475123904cf77d4cd9c44");
+		this.mCookie = WeiboTool.makeCookie(cookieStr);
 	}
 
-	//@Override
+	// @Override
 	public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
 		HttpRequest request = new HttpRequest(crawlDatum);
 		request.setCookie(mCookie);
@@ -40,8 +38,8 @@ public class WeiboGetter extends RamCrawler implements IHtmlGetter {
 				this.addSeed(new CrawlDatum(urls[i]));
 			}
 			this.addRegex("http://weibo.cn/*");
-//			this.addRegex(urlRegex);
-			this.start(8);
+			// this.addRegex(urlRegex);
+			this.start(5);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -49,15 +47,13 @@ public class WeiboGetter extends RamCrawler implements IHtmlGetter {
 		return "";
 	}
 
-
-
 	@Override
 	public void visit(Page page, CrawlDatums next) {
 		Elements weibos = page.select("div");
-		for(Element weibo : weibos)
-		{
+		for (Element weibo : weibos) {
 			String nextUrl = weibo.select("a[href]").attr("href");
-			if((!nextUrl.isEmpty()) && (nextUrl.contains("http://weibo.cn/"))) next.add(new CrawlDatum(nextUrl));
+			if ((!nextUrl.isEmpty()) && (nextUrl.contains("http://weibo.cn/")))
+				next.add(new CrawlDatum(nextUrl));
 			System.out.println(weibo.text());
 		}
 	}

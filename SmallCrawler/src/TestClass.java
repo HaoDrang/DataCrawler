@@ -21,10 +21,12 @@ public class TestClass {
 					+ "http://weibo.cn/?since_id=DaOsOyQvo&max_id=DaO8w5vsw&prev_page=6&page=7,"
 					+ "http://weibo.cn/?since_id=DaOsOyQvo&max_id=DaO8w5vsw&prev_page=7&page=8");
 			tentacle.write2text(ret, "./html/crawler.html");
-			String[] dataLs = tentacle.parseHtml(ret);
+			//String[] dataLs = tentacle.parseHtml(ret);
 			System.out.println(ret);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		System.out.println("------------ Job Done ------------");
 	}
 }

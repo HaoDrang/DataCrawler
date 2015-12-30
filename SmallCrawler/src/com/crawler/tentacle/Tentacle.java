@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import com.crawler.tentacle.html.analyse.IHtmlAnalyse;
 import com.crawler.tentacle.html.analyse.WeiboSearchHtmlAnalyser;
-import com.crawler.tentacle.html.getter.DummyGetter;
 import com.crawler.tentacle.html.getter.IHtmlGetter;
+import com.crawler.tentacle.html.getter.WeiboGetter;
 
 public class Tentacle {
 	/**get a html page from target url
@@ -17,8 +17,13 @@ public class Tentacle {
 	@SuppressWarnings("null")
 	public String getHtml(String url)
 	{
-		//IHtmlGetter getter = new HtmlGetter(true);
-		IHtmlGetter getter = new DummyGetter();
+		IHtmlGetter getter = null;
+		try {
+			getter = new WeiboGetter(false, "12r9420x@outlook.com", "YNQ9yvffqp6xc2b3");
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		return getter.getHtml(url);
 	}

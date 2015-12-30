@@ -15,8 +15,13 @@ public class TestClass {
 		Tentacle tentacle = new Tentacle();
 		
 		try {
-			String ret = tentacle.getHtml("http://s.weibo.com/weibo/%25E5%259C%25A3%25E8%25AF%259E?topnav=1&wvr=6&b=1");
-			tentacle.write2text(ret, "d:/crawler.txt");
+			String ret = tentacle.getHtml("http://weibo.com/huxinger");
+			tentacle.write2text(ret, "./html/crawler.html");
+			String[] dataLs = tentacle.parseHtml(ret);
+//			for (int i = 0; i < dataLs.length; i++) {
+//				System.out.println(dataLs[i]);
+//			}
+//			if(dataLs.length == 0) System.out.println("nothing?");
 			System.out.println(ret);
 		} catch (Exception e) {
 			e.printStackTrace();

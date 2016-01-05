@@ -7,27 +7,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import com.crawler.tentacle.html.getter.IHtmlGetter;
-import com.crawler.tentacle.html.getter.WeiboGetter;
-
 public class Tentacle {
-	/**
-	 * get a html page from target url
-	 * 
-	 */
-	public String getHtml(String url) {
 
-		IHtmlGetter getter = null;
-		try {
-			getter = new WeiboGetter(true, ReadWeiboCookieData("./configs/weibocookie.txt"));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
-		return getter.getHtml(url);
-	}
-
+	@SuppressWarnings("unused")
 	private String ReadWeiboCookieData(String dir) {
 		String result = "";
 
@@ -63,5 +45,9 @@ public class Tentacle {
 		BufferedWriter bw = new BufferedWriter(fw);
 		bw.write(data);
 		bw.close();
+	}
+
+	public void start(String string) {
+		
 	}
 }

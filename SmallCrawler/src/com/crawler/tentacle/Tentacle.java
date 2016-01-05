@@ -1,53 +1,51 @@
 package com.crawler.tentacle;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.net.URL;
 
-public class Tentacle {
+import com.crawler.tentacle.html.analyse.AnalyserFactory;
+import com.crawler.tentacle.html.getter.DummyGetter;
+import com.crawler.tentacle.html.getter.GetterFactory;
+import com.crawler.tentacle.html.getter.IHtmlGetter;
 
-	@SuppressWarnings("unused")
-	private String ReadWeiboCookieData(String dir) {
-		String result = "";
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatum;
+import cn.edu.hfut.dmic.webcollector.model.CrawlDatums;
+import cn.edu.hfut.dmic.webcollector.model.Page;
+import cn.edu.hfut.dmic.webcollector.net.HttpResponse;
+import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
+
+public class Tentacle extends RamCrawler {
+	// TODO add config file
+
+	private GetterFactory 	mGetterFactory;
+	private AnalyserFactory mAnalyserFactory;
+	
+	public void start(String string) {
+		// TODO create crawler by config files
+		
+		mGetterFactory 		= new GetterFactory();
+		mAnalyserFactory 	= new AnalyserFactory();
+	}
+
+	@Override
+	public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
+		// TODO use target htmlgetter to get response
 
 		try {
-			BufferedReader br = new BufferedReader(new FileReader(dir));
-			String ln = null;
-			while ((ln = br.readLine()) != null) {
-				result += ln + ",";
-			}
-			br.close();
-			result = result.substring(0, result.length() - 2);
+			HttpResponse response = new HttpResponse(new URL(crawlDatum.getUrl()));
+			// TODO init a new getter by url
+			IHtmlGetter getter = mGetterFactory.generate(crawlDatum.getUrl());
+			response.setHtml(getter.getHtml(crawlDatum.getUrl()));
+			response.addHeader("Content-Type", "text/html");
+			return response;
+
 		} catch (Exception e) {
 			e.printStackTrace();
+			throw e;
 		}
-
-		return result;
 	}
 
-	public void write2text(String data, String savePath) throws IOException {
-		File f = new File(savePath);
-		if (!f.getParentFile().exists()) {
-			if (!f.getParentFile().mkdirs()) {
-				// TODO use log system
-				System.out.println("Error target file directory create failed!\n" + "savePath");
-				return;
-			}
-		}
-
-		if (!f.exists()) {
-			f.createNewFile();
-		}
-		FileWriter fw = new FileWriter(f);
-		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(data);
-		bw.close();
-	}
-
-	public void start(String string) {
+	@Override
+	public void visit(Page page, CrawlDatums next) {
 		
 	}
 }

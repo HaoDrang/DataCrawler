@@ -19,11 +19,15 @@ public class Tentacle extends RamCrawler {
 	private GetterFactory 	mGetterFactory;
 	private AnalyserFactory mAnalyserFactory;
 	
-	public void start(String string) {
+	public Tentacle(){
 		// TODO create crawler by config files
 		
 		mGetterFactory 		= new GetterFactory();
 		mAnalyserFactory 	= new AnalyserFactory();
+	}
+	
+	public void start(String str) {
+		IHtmlGetter getter = mGetterFactory.generate(str);
 	}
 
 	@Override

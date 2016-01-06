@@ -2,20 +2,24 @@ package com.crawler.tentacle.html.getter;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 public class WeiboWebGetter implements IHtmlGetter {
 
-	DesiredCapabilities mCaps;
+	ChromeOptions mChromeOptions = null;
+	
 
 	public WeiboWebGetter() {
-		// TODO make the chrome driver disable images
+		// TODO disable images by hand
+		mChromeOptions = new ChromeOptions();
+		mChromeOptions.addArguments("user-data-dir=" + 
+		System.getProperty("user.dir") + "//config//ChromeCache//");
 	}
 
 	@Override
 	public String getHtml(String url) {
 
-		ChromeDriver driver = new ChromeDriver();
+		ChromeDriver driver = new ChromeDriver(mChromeOptions);
 		driver.get(url);
 
 		//WebDriverWait wait = new WebDriverWait(driver, 10000);

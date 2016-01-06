@@ -27,6 +27,7 @@ public class Tentacle extends RamCrawler {
 	}
 	
 	public void start(String str) {
+		// TODO test block
 		IHtmlGetter getter = mGetterFactory.generate(str);
 	}
 

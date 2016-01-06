@@ -1,5 +1,9 @@
 package com.crawler.tentacle.html.analyse;
 
 public interface IHtmlAnalyse {
-	String[] Analyse(String html);
+	boolean Analyse(String html);
+
+	String[] Links();
+
+	String[] Contents();
 }

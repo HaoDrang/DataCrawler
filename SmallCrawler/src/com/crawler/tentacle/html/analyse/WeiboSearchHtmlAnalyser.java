@@ -9,7 +9,7 @@ import org.jsoup.select.Elements;
 public class WeiboSearchHtmlAnalyser implements IHtmlAnalyse {
 
 	@Override
-	public String[] Analyse(String html) {
+	public boolean Analyse(String html) {
 		String[] weboContent = null;
 		try	{
 			Document doc = Jsoup.parse(html);
@@ -27,7 +27,7 @@ public class WeiboSearchHtmlAnalyser implements IHtmlAnalyse {
 			System.out.println(e.toString());
 		}
 		
-		return weboContent;
+		return false;
 	}
 
 	private Elements getAllElements(Document doc, String cssQuary) {
@@ -61,5 +61,17 @@ public class WeiboSearchHtmlAnalyser implements IHtmlAnalyse {
 		str += ",content:[" + pName + "]";
 		
 		return str;
+	}
+
+	@Override
+	public String[] Links() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String[] Contents() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

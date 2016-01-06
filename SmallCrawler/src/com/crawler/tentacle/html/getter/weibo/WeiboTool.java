@@ -85,6 +85,9 @@ public class WeiboTool {
 		}
 
 		int end = fullUrl.indexOf("/", pos);
+		if (end < 0) {
+			end = fullUrl.length();
+		}
 		return fullUrl.substring(pos, end);
 	}
 }

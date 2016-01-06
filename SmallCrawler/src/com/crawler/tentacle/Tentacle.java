@@ -3,6 +3,7 @@ package com.crawler.tentacle;
 import java.net.URL;
 
 import com.crawler.tentacle.html.analyse.AnalyserFactory;
+import com.crawler.tentacle.html.analyse.IHtmlAnalyse;
 import com.crawler.tentacle.html.getter.DummyGetter;
 import com.crawler.tentacle.html.getter.GetterFactory;
 import com.crawler.tentacle.html.getter.IHtmlGetter;
@@ -16,19 +17,33 @@ import cn.edu.hfut.dmic.webcollector.plugin.ram.RamCrawler;
 public class Tentacle extends RamCrawler {
 	// TODO add config file
 
-	private GetterFactory 	mGetterFactory;
+	private GetterFactory mGetterFactory;
 	private AnalyserFactory mAnalyserFactory;
-	
-	public Tentacle(){
+
+	private int miThreadNum = 1;
+	private int miDepth = 1;
+
+	public Tentacle() {
 		// TODO create crawler by config files
-		
-		mGetterFactory 		= new GetterFactory();
-		mAnalyserFactory 	= new AnalyserFactory();
+		System.getProperties().setProperty("webdriver.chrome.driver", "drivers//chromedriver.exe");
+
+		mGetterFactory = new GetterFactory();
+		mAnalyserFactory = new AnalyserFactory();
 	}
-	
+
 	public void start(String str) {
-		// TODO test block
-		IHtmlGetter getter = mGetterFactory.generate(str);
+		String[] urls = str.split(",");
+		for (int i = 0; i < urls.length; i++) {
+			this.addSeed(urls[i]);
+		}
+		this.setThreads(miThreadNum);
+		this.setAutoParse(false);
+		try {
+			this.start(miDepth);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -51,6 +66,19 @@ public class Tentacle extends RamCrawler {
 
 	@Override
 	public void visit(Page page, CrawlDatums next) {
-		
+		if (page.getStatus() == Page.STATUS_FETCH_SUCCESS) {
+			IHtmlAnalyse analyser = mAnalyserFactory.generate(page.getUrl());
+			if(analyser.Analyse(page.getHtml())){
+				String[] links = analyser.Links();
+				for (int i = 0; i < links.length; i++) {
+					next.add(new CrawlDatum(links[i]));
+				}
+				
+				String[] contents = analyser.Contents();
+				for (int i = 0; i < contents.length; i++) {
+					System.out.println(contents[i]);
+				}
+			}
+		}
 	}
 }

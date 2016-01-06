@@ -15,7 +15,7 @@ public class TestClass {
 		Tentacle tentacle = new Tentacle();
 		
 		try {
-			tentacle.start("http://weibo.cn/?since_id=DaOsOyQvo&max_id=DaO8w5vsw&prev_page=3&page=4");
+			tentacle.start("http://weibo.com");
 
 		} catch (Exception e) {
 			e.printStackTrace();

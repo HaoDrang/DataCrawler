@@ -13,7 +13,7 @@ public class WeiboAnalyser implements IHtmlAnalyse {
 	
 	@Override
 	public boolean Analyse(String html) {
-		System.out.println(html);
+		
 		for (int i = 0; i < mPatterns.length; i++) {
 			Pattern r = Pattern.compile(mPatterns[i]);
 			Matcher m = r.matcher(html);
@@ -21,6 +21,7 @@ public class WeiboAnalyser implements IHtmlAnalyse {
 				for (int j = 0; j < m.groupCount(); j++) {
 					System.out.println("Weibo:" + m.group(j));
 				}
+				System.out.println("*****" + m.group() + "*****");
 			}else{
 				System.out.print("*****No Match*****");
 			}

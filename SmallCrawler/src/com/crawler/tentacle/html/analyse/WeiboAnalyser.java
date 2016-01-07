@@ -11,7 +11,7 @@ import com.crawler.tentacle.html.analyse.elemetParser.WeiboWebElementParse;
 public class WeiboAnalyser implements IHtmlAnalyse {
 
 	public enum STR {
-		WEB_CLASS_FEED_DETAIL;
+		WEB_CLASS_FEED_DETAIL, WEB_ATTR_LINK_SEL, WEB_ATTR_LINK;
 
 		private String selector;
 
@@ -23,49 +23,67 @@ public class WeiboAnalyser implements IHtmlAnalyse {
 			this.selector = selector;
 		}
 	}
-	
+
 	private String[] mContents;
+	private String[] mLinks;
 
 	public WeiboAnalyser() {
 		mContents = null;
-		
+		mLinks = null;
 		// TODO load pattern from xml
 		STR.WEB_CLASS_FEED_DETAIL.selector = "div[class~=(WB_feed_detail)]";
+		STR.WEB_ATTR_LINK_SEL.selector = "[href^=http://weibo.com]";
+		STR.WEB_ATTR_LINK.selector = "href";
 	}
 
 	@Override
 	public boolean Analyse(String html) {
 
-		Document doc = Jsoup.parse(html);
-		Elements elements = doc.select(STR.WEB_CLASS_FEED_DETAIL.selector);
-		IFeedParser feedParser = new WeiboWebElementParse();
-		
-		mContents = new String[elements.size()];
-		
-		
-		
-		// content getter would destroy the structure of element
-		for (int i = 0; i < elements.size(); i++) {
-			Element element = elements.get(i);
-			mContents[i] = feedParser.parse(element);
-			System.out.println(mContents[i]);
-		}
-		
-		System.out.println("*****Doc analyse End*****");
+		try {
+			Document doc = Jsoup.parse(html);
+			Elements feeds = doc.select(STR.WEB_CLASS_FEED_DETAIL.selector);
+			Elements links = doc.select("[href^=http://weibo.com]");
+			IFeedParser feedParser = new WeiboWebElementParse();
 
-		return false;
+			mContents = new String[feeds.size()];
+			mLinks = new String[links.size()];
+
+			// get links first
+			for (int j = 0; j < links.size(); j++) {
+				Element link = links.get(j);
+				if (link != null)
+					mLinks[j] = link.attr(STR.WEB_ATTR_LINK.selector);
+
+				System.out.println(mLinks[j]);
+			}
+
+			// content getter would destroy the structure of element
+			for (int i = 0; i < feeds.size(); i++) {
+				Element feed = feeds.get(i);
+				if (feed != null)
+					mContents[i] = feedParser.parse(feed);
+				System.out.println(mContents[i]);
+			}
+
+			System.out.println("*****Doc " + doc.title() + " End*****");
+
+			return true;
+
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public String[] Links() {
-		// TODO Auto-generated method stub
-		return null;
+		return mLinks;
 	}
 
 	@Override
 	public String[] Contents() {
-		// TODO Auto-generated method stub
-		return null;
+		return mContents;
 	}
 
 }

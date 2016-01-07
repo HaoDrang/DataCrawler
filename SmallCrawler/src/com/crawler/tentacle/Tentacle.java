@@ -1,10 +1,11 @@
 package com.crawler.tentacle;
 
 import java.net.URL;
+import java.util.HashSet;
+import java.util.Hashtable;
 
 import com.crawler.tentacle.html.analyse.AnalyserFactory;
 import com.crawler.tentacle.html.analyse.IHtmlAnalyse;
-import com.crawler.tentacle.html.getter.DummyGetter;
 import com.crawler.tentacle.html.getter.GetterFactory;
 import com.crawler.tentacle.html.getter.IHtmlGetter;
 
@@ -21,7 +22,14 @@ public class Tentacle extends RamCrawler {
 	private AnalyserFactory mAnalyserFactory;
 
 	private int miThreadNum = 1;
-	private int miDepth = 1;
+	private int miDepth = 2;
+	
+	private HashSet<String> mTable;
+	private HashSet<String> mBlockUrl;
+
+	public HashSet<String> getTable() {
+		return mTable;
+	}
 
 	public Tentacle() {
 		// TODO create crawler by config files
@@ -29,6 +37,8 @@ public class Tentacle extends RamCrawler {
 
 		mGetterFactory = new GetterFactory();
 		mAnalyserFactory = new AnalyserFactory();
+		mTable = new HashSet<String>();
+		mBlockUrl = new HashSet<String>();
 	}
 
 	public void start(String str) {
@@ -71,14 +81,17 @@ public class Tentacle extends RamCrawler {
 			if(analyser.Analyse(page.getHtml())){
 				String[] links = analyser.Links();
 				for (int i = 0; i < links.length; i++) {
+					if(mBlockUrl.contains(links[i])) continue;
+					mBlockUrl.add(links[i]);
 					next.add(new CrawlDatum(links[i]));
 				}
 				
 				String[] contents = analyser.Contents();
 				for (int i = 0; i < contents.length; i++) {
-					System.out.println(contents[i]);
+					if(!mTable.contains(contents[i])) mTable.add(contents[i]);
 				}
 			}
 		}
 	}
+	
 }

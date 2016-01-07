@@ -33,6 +33,7 @@ public class TestClass {
 			for (Iterator<String> iter = tentacle.getTable().iterator(); iter.hasNext();) {
 				String data = (String) iter.next();
 				w.append(data);
+				w.newLine();
 			}
 
 			w.flush();

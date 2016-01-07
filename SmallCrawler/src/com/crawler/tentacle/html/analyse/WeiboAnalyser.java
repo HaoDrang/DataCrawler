@@ -1,32 +1,58 @@
 package com.crawler.tentacle.html.analyse;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import com.crawler.tentacle.html.analyse.elemetParser.IFeedParser;
+import com.crawler.tentacle.html.analyse.elemetParser.WeiboWebElementParse;
 
 public class WeiboAnalyser implements IHtmlAnalyse {
 
-	private String[] mPatterns;
-	public WeiboAnalyser(){
-		//TODO load pattern from xml
-		mPatterns = new String[]{"nickname\\\""};
+	public enum STR {
+		WEB_CLASS_FEED_DETAIL;
+
+		private String selector;
+
+		public String getSelector() {
+			return this.selector;
+		}
+
+		public void setSelector(String selector) {
+			this.selector = selector;
+		}
 	}
 	
+	private String[] mContents;
+
+	public WeiboAnalyser() {
+		mContents = null;
+		
+		// TODO load pattern from xml
+		STR.WEB_CLASS_FEED_DETAIL.selector = "div[class~=(WB_feed_detail)]";
+	}
+
 	@Override
 	public boolean Analyse(String html) {
+
+		Document doc = Jsoup.parse(html);
+		Elements elements = doc.select(STR.WEB_CLASS_FEED_DETAIL.selector);
+		IFeedParser feedParser = new WeiboWebElementParse();
 		
-		for (int i = 0; i < mPatterns.length; i++) {
-			Pattern r = Pattern.compile(mPatterns[i]);
-			Matcher m = r.matcher(html);
-			if(m.find()){
-				for (int j = 0; j < m.groupCount(); j++) {
-					System.out.println("Weibo:" + m.group(j));
-				}
-				System.out.println("*****" + m.group() + "*****");
-			}else{
-				System.out.print("*****No Match*****");
-			}
+		mContents = new String[elements.size()];
+		
+		
+		
+		// content getter would destroy the structure of element
+		for (int i = 0; i < elements.size(); i++) {
+			Element element = elements.get(i);
+			mContents[i] = feedParser.parse(element);
+			System.out.println(mContents[i]);
 		}
 		
+		System.out.println("*****Doc analyse End*****");
+
 		return false;
 	}
 

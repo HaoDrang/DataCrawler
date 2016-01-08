@@ -1,8 +1,12 @@
 package com.crawler.tentacle;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
-import java.util.Hashtable;
+import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 import com.crawler.tentacle.html.analyse.AnalyserFactory;
 import com.crawler.tentacle.html.analyse.IHtmlAnalyse;
@@ -21,8 +25,8 @@ public class Tentacle extends RamCrawler {
 	private GetterFactory mGetterFactory;
 	private AnalyserFactory mAnalyserFactory;
 
-	private int miThreadNum = 1;
-	private int miDepth = 2;
+	private int miThreadNum = 2;
+	private int miDepth = 1;
 	
 	private HashSet<String> mTable;
 	private HashSet<String> mBlockUrl;
@@ -30,11 +34,25 @@ public class Tentacle extends RamCrawler {
 	public HashSet<String> getTable() {
 		return mTable;
 	}
-
+	
+	//tempoutput
+	Logger mLog = null;
+	
 	public Tentacle() {
 		// TODO create crawler by config files
 		System.getProperties().setProperty("webdriver.chrome.driver", "drivers//chromedriver.exe");
 
+		mLog = Logger.getLogger("weiboLog");
+		FileHandler handler = null;
+		try {
+			handler = new FileHandler(".//temp//weibo.log");
+		} catch (SecurityException | IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		handler.setFormatter(new SimpleFormatter());
+		mLog.addHandler(handler);
+		
 		mGetterFactory = new GetterFactory();
 		mAnalyserFactory = new AnalyserFactory();
 		mTable = new HashSet<String>();
@@ -82,16 +100,24 @@ public class Tentacle extends RamCrawler {
 				String[] links = analyser.Links();
 				for (int i = 0; i < links.length; i++) {
 					if(mBlockUrl.contains(links[i])) continue;
-					mBlockUrl.add(links[i]);
+					mBlockUrl.add(getCleanLink(links[i]));
 					next.add(new CrawlDatum(links[i]));
 				}
 				
 				String[] contents = analyser.Contents();
 				for (int i = 0; i < contents.length; i++) {
-					if(!mTable.contains(contents[i])) mTable.add(contents[i]);
+					if(!mTable.contains(contents[i])) {
+						mTable.add(contents[i]);
+						mLog.info(contents[i]);
+					}
 				}
 			}
 		}
+	}
+
+	private String getCleanLink(String link) {
+		if(link.contains("?")) return link.replaceAll("\\?.*", "");
+		return link;
 	}
 	
 }

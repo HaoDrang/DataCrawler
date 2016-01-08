@@ -3,7 +3,12 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.sql.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,7 +26,7 @@ public class TestClass {
 		Tentacle tentacle = new Tentacle();
 
 		try {
-			tentacle.start("http://weibo.com");
+			tentacle.start("http://weibo.cn");
 
 			File f = new File(".\\temp\\output.xls");
 			if (!f.exists())
@@ -39,6 +44,9 @@ public class TestClass {
 			w.flush();
 			w.close();
 			ost.close();
+			
+			
+			
 
 			// WeiboAnalyser analyser = new WeiboAnalyser();
 			// InputStream ist = new FileInputStream(".\\temp\\temphtml.txt");

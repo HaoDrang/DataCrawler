@@ -54,7 +54,7 @@ public class WeiboAnalyser implements IHtmlAnalyse {
 				if (link != null)
 					mLinks[j] = link.attr(STR.WEB_ATTR_LINK.selector);
 
-				System.out.println(mLinks[j]);
+				//System.out.println(mLinks[j]);
 			}
 
 			// content getter would destroy the structure of element
@@ -62,7 +62,7 @@ public class WeiboAnalyser implements IHtmlAnalyse {
 				Element feed = feeds.get(i);
 				if (feed != null)
 					mContents[i] = feedParser.parse(feed);
-				System.out.println(mContents[i]);
+				//System.out.println(mContents[i]);
 			}
 
 			System.out.println("*****Doc " + doc.title() + " End*****");

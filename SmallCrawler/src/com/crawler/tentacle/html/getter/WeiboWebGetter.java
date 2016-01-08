@@ -7,28 +7,27 @@ import org.openqa.selenium.chrome.ChromeOptions;
 public class WeiboWebGetter implements IHtmlGetter {
 
 	ChromeOptions mChromeOptions = null;
-	
+	ChromeDriver mDriver = null;
 
 	public WeiboWebGetter() {
 		// TODO disable images by hand
 		mChromeOptions = new ChromeOptions();
-		mChromeOptions.addArguments("user-data-dir=" + 
-		System.getProperty("user.dir") + "//config//ChromeCache//");
+		mChromeOptions.addArguments("user-data-dir=" + System.getProperty("user.dir") + "//config//ChromeCache//");
+		// mChromeOptions.addArguments("--silent-launch");
+
 	}
 
 	@Override
 	public String getHtml(String url) {
 
-		ChromeDriver driver = new ChromeDriver(mChromeOptions);
-		driver.get(url);
+		mDriver = new ChromeDriver(mChromeOptions);
+		mDriver.get(url);
 
-		//WebDriverWait wait = new WebDriverWait(driver, 10000);
-		
-		WaitForPageLoadDone(driver);
+		WaitForPageLoadDone(mDriver);
 
-		String source = driver.getPageSource();
+		String source = mDriver.getPageSource();
 
-		driver.quit();
+		mDriver.quit();
 
 		return source;
 	}
@@ -57,5 +56,12 @@ public class WeiboWebGetter implements IHtmlGetter {
 				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		//this.mDriver.quit();
+
+		super.finalize();
 	}
 }

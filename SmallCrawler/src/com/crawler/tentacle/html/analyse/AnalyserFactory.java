@@ -17,9 +17,12 @@ public class AnalyserFactory {
 		case WEIBO_DISCOVER:
 		case WEIBO_SEARCH:
 		case WEIBO_WEB:
-		case WEIBO_MOBILE:
+		
 		case WEIBO_MOBILE_M:
 			result = new WeiboAnalyser();
+			break;
+		case WEIBO_MOBILE:
+			result = new WeiboCNAnalyser();
 			break;
 		default:
 			result = new DummyAnalyser();

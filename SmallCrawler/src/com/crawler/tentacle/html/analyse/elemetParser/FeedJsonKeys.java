@@ -5,4 +5,5 @@ public class FeedJsonKeys {
 	public static final String DATE 	= "date";
 	public static final String APP 		= "app";
 	public static final String CONTENT 	= "content";
+	public static final String LINK		= "link";
 }

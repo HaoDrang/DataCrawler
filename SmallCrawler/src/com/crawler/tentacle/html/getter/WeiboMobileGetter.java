@@ -17,7 +17,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 public class WeiboMobileGetter implements IHtmlGetter {
 
 	volatile static private HtmlUnitDriver mDriver = null;
-	//volatile static private Cookie[] mCookie = null;
+	// volatile static private Cookie[] mCookie = null;
 	private final String mConfigDir = ".\\configs\\weiboMobileCookie";
 	private final String mDateFormat = "yyyy-MM-dd'T'hh:mm:ss.SSS";
 	private final String mWeiboMobileDomain = "weibo.cn";
@@ -63,13 +63,14 @@ public class WeiboMobileGetter implements IHtmlGetter {
 
 						boolean isHttpOnly = (values[6] == null || values[6].isEmpty());
 						boolean isSecure = (values[7] == null || values[7].isEmpty());
-						mCookies[i] = new Cookie(values[0], values[1], values[2], values[3], date, isSecure, isHttpOnly);
+						mCookies[i] = new Cookie(values[0], values[1], values[2], values[3], date, isSecure,
+								isHttpOnly);
 					}
-					
-					//create a new driver
+
+					// create a new driver
 					mDriver = new HtmlUnitDriver();
 					mDriver.get(mHttpPrefix + mWeiboMobileDomain);
-					
+
 					for (int i = 0; i < mCookies.length; i++) {
 						mDriver.manage().addCookie(mCookies[i]);
 					}
@@ -79,7 +80,7 @@ public class WeiboMobileGetter implements IHtmlGetter {
 	}
 
 	private String[] getCookiesDataFromFile(String dir) {
-		
+
 		String str = "";
 		try {
 			InputStream ist = new FileInputStream(dir);
@@ -111,7 +112,7 @@ public class WeiboMobileGetter implements IHtmlGetter {
 		mDriver.get(url);
 
 		String ret = mDriver.getPageSource();
-		
+
 		return ret;
 	}
 
@@ -120,5 +121,5 @@ public class WeiboMobileGetter implements IHtmlGetter {
 		mDriver.close();
 		super.finalize();
 	}
-	
+
 }

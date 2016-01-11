@@ -76,11 +76,11 @@ public class Tentacle extends RamCrawler {
 
 	@Override
 	public HttpResponse getResponse(CrawlDatum crawlDatum) throws Exception {
-		// TODO use target htmlgetter to get response
+		// use target htmlgetter to get response
 
 		try {
 			HttpResponse response = new HttpResponse(new URL(crawlDatum.getUrl()));
-			// TODO init a new getter by url
+			// init a new getter by url
 			IHtmlGetter getter = mGetterFactory.generate(crawlDatum.getUrl());
 			response.setHtml(getter.getHtml(crawlDatum.getUrl()));
 			response.addHeader("Content-Type", "text/html");

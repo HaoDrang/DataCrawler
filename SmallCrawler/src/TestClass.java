@@ -1,6 +1,10 @@
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.sql.Date;
@@ -13,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.crawler.tentacle.Tentacle;
+import com.crawler.tentacle.html.analyse.WeiboCNAnalyser;
 
 public class TestClass {
 	public static void main(String[] args) {
@@ -26,46 +31,41 @@ public class TestClass {
 		Tentacle tentacle = new Tentacle();
 
 		try {
-			tentacle.start("http://weibo.cn");
+			/*
+			 * tentacle.start("http://weibo.cn");
+			 * 
+			 * File f = new File(".\\temp\\output.xls"); if (!f.exists())
+			 * f.createNewFile();
+			 * 
+			 * OutputStream ost = new FileOutputStream(".\\temp\\output.xls");
+			 * BufferedWriter w = new BufferedWriter(new
+			 * OutputStreamWriter(ost));
+			 * 
+			 * for (Iterator<String> iter = tentacle.getTable().iterator();
+			 * iter.hasNext();) { String data = (String) iter.next();
+			 * w.append(data); w.newLine(); }
+			 * 
+			 * w.flush(); w.close(); ost.close();
+			 * 
+			 */
 
-			File f = new File(".\\temp\\output.xls");
-			if (!f.exists())
-				f.createNewFile();
+			WeiboCNAnalyser analyser = new WeiboCNAnalyser();
+			InputStream ist = new FileInputStream(".\\temp\\temphtml.txt");
+			BufferedReader r = new BufferedReader(new InputStreamReader(ist));
 
-			OutputStream ost = new FileOutputStream(".\\temp\\output.xls");
-			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(ost));
+			String fhtml = "";
 
-			for (Iterator<String> iter = tentacle.getTable().iterator(); iter.hasNext();) {
-				String data = (String) iter.next();
-				w.append(data);
-				w.newLine();
+			String line = r.readLine();
+
+			while (line != null) {
+				fhtml += line + "\n";
+				line = r.readLine();
 			}
 
-			w.flush();
-			w.close();
-			ost.close();
-			
-			
-			
+			r.close();
+			ist.close();
 
-			// WeiboAnalyser analyser = new WeiboAnalyser();
-			// InputStream ist = new FileInputStream(".\\temp\\temphtml.txt");
-			// BufferedReader r = new BufferedReader(new
-			// InputStreamReader(ist));
-			//
-			// String fhtml = "";
-			//
-			// String line = r.readLine();
-			//
-			// while(line != null){
-			// fhtml+=line + "\n";
-			// line = r.readLine();
-			// }
-			//
-			// r.close();
-			// ist.close();
-
-			// analyser.Analyse(fhtml);
+			analyser.Analyse(fhtml);
 
 		} catch (Exception e) {
 			e.printStackTrace();

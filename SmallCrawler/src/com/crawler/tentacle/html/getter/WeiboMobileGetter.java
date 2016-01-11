@@ -16,24 +16,27 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 public class WeiboMobileGetter implements IHtmlGetter {
 
-	volatile static private Cookie[] mCookie = null;
+	volatile static private HtmlUnitDriver mDriver = null;
+	//volatile static private Cookie[] mCookie = null;
 	private final String mConfigDir = ".\\configs\\weiboMobileCookie";
 	private final String mDateFormat = "yyyy-MM-dd'T'hh:mm:ss.SSS";
+	private final String mWeiboMobileDomain = "weibo.cn";
+	private final String mHttpPrefix = "http://";
 
 	public WeiboMobileGetter() {
 
-		if (mCookie == null) {
+		if (mDriver == null) {
 
 			synchronized (WeiboMobileGetter.class) {
-				if (mCookie == null) {
-					String[] cookies = getCookiesDataFromFile(mConfigDir);
+				if (mDriver == null) {
+					String[] cookiestr = getCookiesDataFromFile(mConfigDir);
 
-					mCookie = new Cookie[cookies.length];
+					Cookie[] mCookies = new Cookie[cookiestr.length];
 
-					for (int i = 0; i < cookies.length; i++) {
+					for (int i = 0; i < cookiestr.length; i++) {
 
 						String[] values = new String[8];
-						String[] split = cookies[i].split(",");
+						String[] split = (cookiestr[i].trim()).split(",");
 
 						System.arraycopy(split, 0, values, 0, split.length);
 
@@ -43,15 +46,32 @@ public class WeiboMobileGetter implements IHtmlGetter {
 						try {
 							date = new Date(df.parse(values[4]).getTime());
 						} catch (ParseException e) {
-							e.printStackTrace();
+							// e.printStackTrace();
+							date = null;
 						}
 						// keep useless
-						int size = Integer.parseInt(values[5]);
+						@SuppressWarnings("unused")
+						int size = 0;
+						try {
+							size = Integer.parseInt(values[5]);
+						} catch (Exception e) {
+							e.printStackTrace();
+							for (String string : split) {
+								System.out.println(string);
+							}
+						}
 
 						boolean isHttpOnly = (values[6] == null || values[6].isEmpty());
 						boolean isSecure = (values[7] == null || values[7].isEmpty());
-
-						mCookie[i] = new Cookie(values[0], values[1], values[2], values[3], date, isSecure, isHttpOnly);
+						mCookies[i] = new Cookie(values[0], values[1], values[2], values[3], date, isSecure, isHttpOnly);
+					}
+					
+					//create a new driver
+					mDriver = new HtmlUnitDriver();
+					mDriver.get(mHttpPrefix + mWeiboMobileDomain);
+					
+					for (int i = 0; i < mCookies.length; i++) {
+						mDriver.manage().addCookie(mCookies[i]);
 					}
 				}
 			}
@@ -59,17 +79,17 @@ public class WeiboMobileGetter implements IHtmlGetter {
 	}
 
 	private String[] getCookiesDataFromFile(String dir) {
-
+		
 		String str = "";
 		try {
 			InputStream ist = new FileInputStream(dir);
 			BufferedReader r = new BufferedReader(new InputStreamReader(ist));
 
 			String line = r.readLine();
-			str += line;
 			while (line != null) {
-				str += "|";
-				str += r.readLine();
+				str += line;
+				str += ";";
+				line = r.readLine();
 			}
 
 			r.close();
@@ -78,24 +98,27 @@ public class WeiboMobileGetter implements IHtmlGetter {
 			e.printStackTrace();
 		}
 
-		return str.split("|");
+		for (String onSplit : str.split(";")) {
+			System.out.println(onSplit);
+		}
+
+		return str.split(";");
 	}
 
 	@Override
 	public String getHtml(String url) {
 
-		HtmlUnitDriver driver = new HtmlUnitDriver();
+		mDriver.get(url);
 
-		for (int i = 0; i < mCookie.length; i++) {
-			driver.manage().addCookie(mCookie[i]);
-		}
-
-		driver.get(url);
-
-		String ret = driver.getPageSource();
-
-		driver.close();
-
+		String ret = mDriver.getPageSource();
+		
 		return ret;
 	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		mDriver.close();
+		super.finalize();
+	}
+	
 }

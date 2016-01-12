@@ -31,41 +31,44 @@ public class TestClass {
 		Tentacle tentacle = new Tentacle();
 
 		try {
-			/*
-			 * tentacle.start("http://weibo.cn");
-			 * 
-			 * File f = new File(".\\temp\\output.xls"); if (!f.exists())
-			 * f.createNewFile();
-			 * 
-			 * OutputStream ost = new FileOutputStream(".\\temp\\output.xls");
-			 * BufferedWriter w = new BufferedWriter(new
-			 * OutputStreamWriter(ost));
-			 * 
-			 * for (Iterator<String> iter = tentacle.getTable().iterator();
-			 * iter.hasNext();) { String data = (String) iter.next();
-			 * w.append(data); w.newLine(); }
-			 * 
-			 * w.flush(); w.close(); ost.close();
-			 * 
-			 */
 
-			WeiboCNAnalyser analyser = new WeiboCNAnalyser();
-			InputStream ist = new FileInputStream(".\\temp\\temphtml.txt");
-			BufferedReader r = new BufferedReader(new InputStreamReader(ist));
+			tentacle.start("http://weibo.cn");
 
-			String fhtml = "";
+			File f = new File(".\\temp\\output.xls");
+			if (!f.exists())
+				f.createNewFile();
 
-			String line = r.readLine();
+			OutputStream ost = new FileOutputStream(".\\temp\\output.xls");
+			BufferedWriter w = new BufferedWriter(new OutputStreamWriter(ost));
 
-			while (line != null) {
-				fhtml += line + "\n";
-				line = r.readLine();
+			for (Iterator<String> iter = tentacle.getTable().iterator(); iter.hasNext();) {
+				String data = (String) iter.next();
+				w.append(data);
+				w.newLine();
 			}
 
-			r.close();
-			ist.close();
+			w.flush();
+			w.close();
+			ost.close();
 
-			analyser.Analyse(fhtml);
+			// WeiboCNAnalyser analyser = new WeiboCNAnalyser();
+			// InputStream ist = new FileInputStream(".\\temp\\temphtml.txt");
+			// BufferedReader r = new BufferedReader(new
+			// InputStreamReader(ist));
+			//
+			// String fhtml = "";
+			//
+			// String line = r.readLine();
+			//
+			// while (line != null) {
+			// fhtml += line + "\n";
+			// line = r.readLine();
+			// }
+			//
+			// r.close();
+			// ist.close();
+			//
+			// analyser.Analyse(fhtml);
 
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -14,7 +14,7 @@ import com.crawler.tentacle.html.analyse.elemetParser.WeiboCNElementParse;
 public class WeiboCNAnalyser implements IHtmlAnalyse {
 
 	public enum STR {
-		WEB_CLASS_FEED_DETAIL, WEB_ATTR_LINK_SEL, WEB_ATTR_LINK, WEB_TAG_TOP;
+		WEB_CLASS_FEED_DETAIL, WEB_ATTR_LINK_SEL, WEB_ATTR_LINK, WEB_TAG_TOP, WEB_PAGE_OWNER_ELE, HTML_NBSP_SPLITER;
 
 		private String selector;
 
@@ -38,6 +38,8 @@ public class WeiboCNAnalyser implements IHtmlAnalyse {
 		STR.WEB_ATTR_LINK_SEL.selector = "[href^=http://weibo.cn]";
 		STR.WEB_ATTR_LINK.selector = "href";
 		STR.WEB_TAG_TOP.selector = "td";
+		STR.WEB_PAGE_OWNER_ELE.selector = "span.ctt";
+		STR.HTML_NBSP_SPLITER.selector = StringEscapeUtils.unescapeHtml4("&nbsp;");
 	}
 
 	@Override
@@ -47,7 +49,7 @@ public class WeiboCNAnalyser implements IHtmlAnalyse {
 			Document doc = Jsoup.parse(html);
 			String userName = getPageOwner(doc);
 			Elements feeds = doc.select(STR.WEB_CLASS_FEED_DETAIL.selector);
-			Elements links = doc.select(STR.WEB_ATTR_LINK_SEL.selector);
+
 			IFeedParser feedParser = new WeiboCNElementParse(userName, "");
 			ILinkExtractor linkExtractor = new WeiboCNLinkExtractor();
 
@@ -57,12 +59,7 @@ public class WeiboCNAnalyser implements IHtmlAnalyse {
 			mLinks = linkExtractor.extract(doc);
 
 			// content getter would destroy the structure of element
-			for (int i = 0; i < feeds.size(); i++) {
-				Element feed = feeds.get(i);
-				if (feed != null)
-					mContents[i] = feedParser.parse(feed);
-				System.out.println(mContents[i]);
-			}
+			generateContents(feeds, feedParser);
 
 			System.out.println("*****Doc " + doc.title() + " End*****");
 
@@ -74,18 +71,28 @@ public class WeiboCNAnalyser implements IHtmlAnalyse {
 		}
 	}
 
+	private void generateContents(Elements feeds, IFeedParser feedParser) {
+		for (int i = 0; i < feeds.size(); i++) {
+			Element feed = feeds.get(i);
+			if (feed != null)
+				mContents[i] = feedParser.parse(feed);
+			if (!mContents[i].isEmpty())
+				System.out.println(mContents[i]);
+		}
+		System.out.println("********Content OK********");
+	}
+
 	private String getPageOwner(Document doc) {
 		try {
 
 			Element body = doc.body();
 
-			Elements select = (body.getElementsByTag(STR.WEB_TAG_TOP.selector)).select("span.ctt");
+			Elements select = (body.getElementsByTag(STR.WEB_TAG_TOP.selector)).select(STR.WEB_PAGE_OWNER_ELE.selector);
 
 			Element element = select.get(0).clone();
 			element.children().remove();
 
-			String spliter = StringEscapeUtils.unescapeHtml4("&nbsp;");
-			String[] splits = element.text().split(spliter);
+			String[] splits = element.text().split(STR.HTML_NBSP_SPLITER.selector);
 			for (String string : splits) {
 				System.out.println(string);
 			}

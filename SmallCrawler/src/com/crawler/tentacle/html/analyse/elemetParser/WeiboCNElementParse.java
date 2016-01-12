@@ -87,7 +87,6 @@ public class WeiboCNElementParse implements IFeedParser {
 		json.append(FeedJsonKeys.APP, app);
 		json.append(FeedJsonKeys.CONTENT, content);
 		json.append(FeedJsonKeys.LINK, link);
-
 		return content.isEmpty() ? "" : json.toString();
 	}
 

@@ -80,6 +80,7 @@ public class Tentacle extends RamCrawler {
 
 		try {
 			HttpResponse response = new HttpResponse(new URL(crawlDatum.getUrl()));
+			
 			// init a new getter by url
 			IHtmlGetter getter = mGetterFactory.generate(crawlDatum.getUrl());
 			response.setHtml(getter.getHtml(crawlDatum.getUrl()));
@@ -99,9 +100,9 @@ public class Tentacle extends RamCrawler {
 			if(analyser.Analyse(page.getHtml())){
 				String[] links = analyser.Links();
 				for (int i = 0; i < links.length; i++) {
-					if(mBlockUrl.contains(links[i])) continue;
-					mBlockUrl.add(getCleanLink(links[i]));
-					next.add(new CrawlDatum(links[i]));
+					//if(mBlockUrl.contains(links[i])) continue;
+					//mBlockUrl.add(getCleanLink(links[i]));
+					next.add(new CrawlDatum(links[i]).setKey(links[i]));
 				}
 				
 				String[] contents = analyser.Contents();

@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.logging.FileHandler;
-import java.util.logging.Formatter;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
@@ -25,11 +24,10 @@ public class Tentacle extends RamCrawler {
 	private GetterFactory mGetterFactory;
 	private AnalyserFactory mAnalyserFactory;
 
-	private int miThreadNum = 2;
-	private int miDepth = 1;
+	private int miThreadNum = 5;
+	private int miDepth = 7;
 	
 	private HashSet<String> mTable;
-	private HashSet<String> mBlockUrl;
 
 	public HashSet<String> getTable() {
 		return mTable;
@@ -56,7 +54,6 @@ public class Tentacle extends RamCrawler {
 		mGetterFactory = new GetterFactory();
 		mAnalyserFactory = new AnalyserFactory();
 		mTable = new HashSet<String>();
-		mBlockUrl = new HashSet<String>();
 	}
 
 	public void start(String str) {
@@ -116,6 +113,7 @@ public class Tentacle extends RamCrawler {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private String getCleanLink(String link) {
 		if(link.contains("?")) return link.replaceAll("\\?.*", "");
 		return link;

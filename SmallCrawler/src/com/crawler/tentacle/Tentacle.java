@@ -26,20 +26,21 @@ public class Tentacle extends RamCrawler {
 
 	private int miThreadNum = 5;
 	private int miDepth = 7;
-	
+
 	private HashSet<String> mTable;
 
 	public HashSet<String> getTable() {
 		return mTable;
 	}
-	
-	//tempoutput
+
+	// tempoutput
 	Logger mLog = null;
-	
+
 	public Tentacle() {
+		super(false);
 		// TODO create crawler by config files
 		System.getProperties().setProperty("webdriver.chrome.driver", "drivers//chromedriver.exe");
-
+		
 		mLog = Logger.getLogger("weiboLog");
 		FileHandler handler = null;
 		try {
@@ -50,7 +51,7 @@ public class Tentacle extends RamCrawler {
 		}
 		handler.setFormatter(new SimpleFormatter());
 		mLog.addHandler(handler);
-		
+
 		mGetterFactory = new GetterFactory();
 		mAnalyserFactory = new AnalyserFactory();
 		mTable = new HashSet<String>();
@@ -77,7 +78,7 @@ public class Tentacle extends RamCrawler {
 
 		try {
 			HttpResponse response = new HttpResponse(new URL(crawlDatum.getUrl()));
-			
+
 			// init a new getter by url
 			IHtmlGetter getter = mGetterFactory.generate(crawlDatum.getUrl());
 			response.setHtml(getter.getHtml(crawlDatum.getUrl()));
@@ -94,17 +95,17 @@ public class Tentacle extends RamCrawler {
 	public void visit(Page page, CrawlDatums next) {
 		if (page.getStatus() == Page.STATUS_FETCH_SUCCESS) {
 			IHtmlAnalyse analyser = mAnalyserFactory.generate(page.getUrl());
-			if(analyser.Analyse(page.getHtml())){
+			if (analyser.Analyse(page.getHtml())) {
 				String[] links = analyser.Links();
 				for (int i = 0; i < links.length; i++) {
-					//if(mBlockUrl.contains(links[i])) continue;
-					//mBlockUrl.add(getCleanLink(links[i]));
+					// if(mBlockUrl.contains(links[i])) continue;
+					// mBlockUrl.add(getCleanLink(links[i]));
 					next.add(new CrawlDatum(links[i]).setKey(links[i]));
 				}
-				
+
 				String[] contents = analyser.Contents();
 				for (int i = 0; i < contents.length; i++) {
-					if(!mTable.contains(contents[i])) {
+					if (!mTable.contains(contents[i])) {
 						mTable.add(contents[i]);
 						mLog.info(contents[i]);
 					}
@@ -115,8 +116,9 @@ public class Tentacle extends RamCrawler {
 
 	@SuppressWarnings("unused")
 	private String getCleanLink(String link) {
-		if(link.contains("?")) return link.replaceAll("\\?.*", "");
+		if (link.contains("?"))
+			return link.replaceAll("\\?.*", "");
 		return link;
 	}
-	
+
 }

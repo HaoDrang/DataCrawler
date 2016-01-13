@@ -10,6 +10,7 @@ public class WeiboWebGetter implements IHtmlGetter {
 	ChromeDriver mDriver = null;
 
 	public WeiboWebGetter() {
+
 		// TODO disable images by hand
 		mChromeOptions = new ChromeOptions();
 		mChromeOptions.addArguments("user-data-dir=" + System.getProperty("user.dir") + "//config//ChromeCache//");
@@ -60,7 +61,7 @@ public class WeiboWebGetter implements IHtmlGetter {
 
 	@Override
 	protected void finalize() throws Throwable {
-		//this.mDriver.quit();
+		// this.mDriver.quit();
 
 		super.finalize();
 	}

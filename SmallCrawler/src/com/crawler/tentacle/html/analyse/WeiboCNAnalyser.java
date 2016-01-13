@@ -79,7 +79,11 @@ public class WeiboCNAnalyser implements IHtmlAnalyse {
 			if (!mContents[i].isEmpty())
 				System.out.println(mContents[i]);
 		}
-		System.out.println("********Content OK********");
+		
+		if(mContents.length > 0)
+			System.out.println("********Content OK********");
+		else
+			System.out.println("[System]:The page has no Weibo Content");
 	}
 
 	private String getPageOwner(Document doc) {

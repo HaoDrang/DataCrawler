@@ -14,16 +14,21 @@ public class WeiboCNLinkExtractor implements ILinkExtractor {
 	private final String ELEMENT_SELECTOR_PAGEINFO = "input[name=mp]";
 	private final String ELEMENT_URL_SELECTOR = "a[href]";
 	private final String LINK_ACCOUNT = "account";
-	private final String LINK_ADD_FAV = "fav//addfav";
+	private final String LINK_ADD_FAV = "fav/addFav";
 	private final String LINK_ATTITUDE_KEYWORD = "attitude";
 	private final String LINK_COMMENT = "comment";
 	private final String LINK_DOMAIN_WEIBO_CN = "http://weibo.cn";
 	private final String LINK_KEY_ATTR = "href";
 	private final String LINK_M_BLOG = "mblog";
 	private final String LINK_PAGE = "page";
-	private final String LINK_PAGES_KEYWORD = "?page=";
+	private final String LINK_PAGE_EQUAL = "page=";
+	private final String LINK_PAGE_EQUAL_NUM = "page=\\d.";
+	private final String LINK_PAGE_FORMAT_1 = "page={0}";
+	private final String LINK_PAGE_FORMAT_2 = "&page={0}";
+	private final String LINK_PAGE_FORMAT_3 = "?page={0}";
 	private final String LINK_REPOST = "repost";
 	private final String LINK_SINAURL = "sinaurl";
+	private final String LINK_SPAM = "spam";
 	private final String LINK_USER = "//u//";
 
 	@Override
@@ -31,8 +36,7 @@ public class WeiboCNLinkExtractor implements ILinkExtractor {
 
 		ArrayList<String> links = new ArrayList<String>();
 		Elements allLinks = doc.getElementsByAttribute(LINK_KEY_ATTR);
-		if (doc == null)
-			return null;
+		
 		for (String pageLink : tryGetNextPages(doc)) {
 			links.add(pageLink);
 			// System.out.println("[Link:" + pageLink + "]");
@@ -84,6 +88,10 @@ public class WeiboCNLinkExtractor implements ILinkExtractor {
 		return link.contains(LINK_SINAURL);
 	}
 
+	private boolean isSpamPage(String link) {
+		return link.contains(LINK_SPAM);
+	}
+
 	private boolean isULink(String link) {
 		return link.contains(LINK_USER);
 	}
@@ -129,6 +137,9 @@ public class WeiboCNLinkExtractor implements ILinkExtractor {
 		if (isHelpPage(link))
 			return false;
 
+		if (isSpamPage(link))
+			return false;
+
 		return true;
 	}
 
@@ -141,6 +152,15 @@ public class WeiboCNLinkExtractor implements ILinkExtractor {
 			if (!urlEle.isEmpty()) {
 				try {
 					url = LINK_DOMAIN_WEIBO_CN.concat(urlEle.attr(ELEMENT_ATTR_HREF));
+					if (url.contains(LINK_PAGE_EQUAL)) {
+						url.replace(LINK_PAGE_EQUAL_NUM, LINK_PAGE_FORMAT_1);
+					} else {
+						if (url.contains("?"))
+							url += LINK_PAGE_FORMAT_2;
+						else {
+							url += LINK_PAGE_FORMAT_3;
+						}
+					}
 				} catch (Exception e) {
 				}
 			}
@@ -158,7 +178,9 @@ public class WeiboCNLinkExtractor implements ILinkExtractor {
 			if (pageNum > 0) {
 				String[] urls = new String[pageNum];
 				for (int i = 0; i < urls.length; i++) {
-					urls[i] = url + LINK_PAGES_KEYWORD + (i + 1);
+					urls[i] = String.format(url, (i + 1));// url +
+															// LINK_PAGES_KEYWORD
+															// + (i + 1);
 				}
 				return urls;
 			}

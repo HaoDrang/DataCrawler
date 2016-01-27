@@ -43,7 +43,6 @@ public class YouDaoWordComber_v6_3 implements IWordComber {
 				}
 				break;
 			}
-			
 		}
 		
 		System.out.println("Word Read Begin...");

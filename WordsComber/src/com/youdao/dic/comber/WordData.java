@@ -3,7 +3,7 @@ package com.youdao.dic.comber;
 public class WordData {
 
 	public String word;
-	public String tras;
+	public String trans;
 	public String phonetic;
 	public String tags;
 	public int progress;

@@ -7,7 +7,7 @@ public class Main {
 		
 		System.out.println("Creating Word Comber");
 		
-		IWordComber comber = WordComberCreator.create("source filePath");
+		IWordComber comber = WordComberCreator.create("./temp/youdaodic.xml");
 		
 		comber.start();
 		

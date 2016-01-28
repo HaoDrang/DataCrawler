@@ -47,7 +47,7 @@ public class YouDaoWordComber_v6_3 implements IWordComber {
 				Element ele = (Element)wordItem;
 				WordData newData = new WordData();
 				ser.deSerialize(newData, ele);
-				System.out.println(newData.word);
+				System.out.println("[CurrentWord] " + newData.word);
 				
 				if(normalizeData(newData)){
 					mDic.put(newData.word, newData);
@@ -56,11 +56,10 @@ public class YouDaoWordComber_v6_3 implements IWordComber {
 				try {
 					Thread.sleep(REQUEST_DELAY);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			break;
+			//break;
 		}
 		
 		System.out.println("Print Combed Words...");
@@ -72,6 +71,7 @@ public class YouDaoWordComber_v6_3 implements IWordComber {
 		for (Entry<String, WordData> entry : mDic.entrySet()) {
 			WordData value = entry.getValue();
 			sb.append(ser.serialize(value));
+			sb.append("\n");
 		}
 		
 		sb.append("</wordbook>");
@@ -119,6 +119,10 @@ public class YouDaoWordComber_v6_3 implements IWordComber {
 		
 		if(newData.tags.isEmpty()){
 			newData.tags = mTestWord.getTags();
+		}
+		
+		if(!mTestWord.getTrans().isEmpty()){
+			newData.trans = mTestWord.getTrans();
 		}
 		
 		return true;

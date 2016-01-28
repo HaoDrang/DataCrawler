@@ -27,7 +27,7 @@ public class YoudaoDicWordHTMLTest implements IWordTest {
 
 	private final String YOUDAODIC_URL_FORMAT = "http://dict.youdao.com/search?q=%s&keyfrom=dict.index";
 
-	private final String PHONETIC_FORMAT = "<![CDATA[%s]]>";
+	private final String CDATA_FORMAT = "<![CDATA[%s]]>";
 
 	public String getPhonetic() {
 		return mPhonetic;
@@ -65,8 +65,8 @@ public class YoudaoDicWordHTMLTest implements IWordTest {
 				}
 
 				mTags = "Star_" + mStar;
-				mPhonetic = String.format(PHONETIC_FORMAT, mPhonetic);
-
+				mPhonetic = String.format(CDATA_FORMAT, mPhonetic);
+				mTrans = String.format(CDATA_FORMAT, mTrans);
 				break;
 				// System.out.println(doc.html());
 			} catch (IOException e) {

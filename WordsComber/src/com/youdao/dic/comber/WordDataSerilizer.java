@@ -9,7 +9,15 @@ public class WordDataSerilizer implements IWordDataSerilizer {
 	public final String PHONETIC = "phonetic";
 	public final String TAGS = "tags";
 	public final String PROGRESS = "progress";
-	
+
+	public final String ITEM_FORMAT = "<item>%s</item>";
+
+	public final String WORD_FORMAT = "<word>%s</word>";
+	public final String TRANS_FORMAT = "<trans>%s</trans>";
+	public final String PHONETIC_FORMAT = "<phonetic>%s</phonetic>";
+	public final String TAGS_FORMAT = "<tags>%s</tags>";
+	public final String PROGRESS_FORMAT = "<progress>%s</progress>";
+
 	@Override
 	public void deSerialize(WordData data, Element ele) {
 		data.word = ele.getElementsByTagName(WORD).item(0).getTextContent();
@@ -21,9 +29,17 @@ public class WordDataSerilizer implements IWordDataSerilizer {
 
 	@Override
 	public String serialize(WordData data) {
-		//write wordbook label
-		//write item label
-		//TODO write data
-		return null;
+
+		String result = "";
+
+		result += String.format(WORD_FORMAT, data.word);
+		result += String.format(TRANS_FORMAT, data.trans);
+		result += String.format(PHONETIC_FORMAT, data.phonetic);
+		result += String.format(TAGS_FORMAT, data.tags);
+		result += String.format(PROGRESS_FORMAT, data.progress);
+
+		result = String.format(ITEM_FORMAT, result);
+
+		return result;
 	}
 }

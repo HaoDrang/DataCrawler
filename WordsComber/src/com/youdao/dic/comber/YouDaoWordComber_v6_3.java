@@ -1,11 +1,8 @@
 package com.youdao.dic.comber;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,7 +44,7 @@ public class YouDaoWordComber_v6_3 implements IWordComber {
 				Element ele = (Element)wordItem;
 				WordData newData = new WordData();
 				ser.deSerialize(newData, ele);
-				System.out.println("[CurrentWord] " + newData.word);
+				System.out.println("[PROGRESS: " + i + "/" + list.getLength() + " ]" + "[CurrentWord] " + newData.word );
 				
 				if(normalizeData(newData)){
 					mDic.put(newData.word, newData);

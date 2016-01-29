@@ -53,12 +53,13 @@ public class YoudaoDicWordHTMLTest implements IWordTest {
 	public void readData(String word) {
 
 		String url = String.format(YOUDAODIC_URL_FORMAT, word);
-		System.out.println(url);
+		//System.out.println(url);
 
 		for (int i = 0; i < MAX_RETRY_COUNT; i++) {
 			try {
 				Document doc = Jsoup.connect(url).get();
 
+				Clean();
 				// try get collins Result
 				if (!tryGetCollinsResult(doc)) {
 					tryNormalResult(doc);
@@ -78,11 +79,18 @@ public class YoudaoDicWordHTMLTest implements IWordTest {
 		}
 	}
 
+	private void Clean() {
+		mPhonetic = "";
+		mStar = 0;
+		mTags = "";
+		mTrans = "";
+		mWord = "";
+	}
+
 	private void sleep(long retrySleepTime) {
 		try {
 			Thread.sleep(retrySleepTime);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -101,7 +109,7 @@ public class YoudaoDicWordHTMLTest implements IWordTest {
 		if (!starNumStr.isEmpty()) {
 			mStar = Integer.parseInt(starNumStr);
 		}
-		System.out.println("Star Level :" + mStar);
+		//System.out.println("Star Level :" + mStar);
 
 		Elements eles = collinsRoot.getElementsByClass("collinsMajorTrans");
 		for (int i = 0; i < eles.size(); i++) {
@@ -113,7 +121,7 @@ public class YoudaoDicWordHTMLTest implements IWordTest {
 		Elements phoeles = doc.select("span.phonetic");
 		if (phoeles.size() > 0) {
 			mPhonetic = phoeles.get(phoeles.size() - 1).text();
-			System.out.println(mPhonetic);
+			//System.out.println(mPhonetic);
 		}
 
 		return true;
@@ -132,13 +140,13 @@ public class YoudaoDicWordHTMLTest implements IWordTest {
 				mTrans += transArray.get(i).text() + "\n";
 			}
 
-			System.out.println(mTrans);
+			//System.out.println(mTrans);
 		}
 
 		Elements phoeles = doc.select("span.phonetic");
 		if (phoeles.size() > 0) {
 			mPhonetic = phoeles.get(phoeles.size() - 1).text();
-			System.out.println(mPhonetic);
+			//System.out.println(mPhonetic);
 		}
 	}
 }
